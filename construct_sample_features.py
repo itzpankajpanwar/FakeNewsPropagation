@@ -203,7 +203,7 @@ def get_nx_propagation_graphs(data_folder, news_source):
 def get_dataset_feature_array(news_source, include_micro=True, include_macro=True, include_structural=None,
                               include_temporal=None,
                               include_linguistic=None, time_interval=None):
-    fake_prop_graph, real_prop_graph = get_nx_propagation_graphs("data/nx_network_data", news_source)
+    fake_prop_graph, real_prop_graph = get_nx_propagation_graphs("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
 
     fake_prop_graph, real_prop_graph = equal_samples(fake_prop_graph, real_prop_graph)
 
