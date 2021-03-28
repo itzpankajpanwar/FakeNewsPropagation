@@ -55,7 +55,7 @@ def construct_tweet_node_from_nx_node(node_id, graph: nx.DiGraph):
                       sentiment=graph.node[node_id].get('sentiment', None))
 
 
-def get_dataset_sample_ids(news_source, news_label, dataset_dir="data/sample_ids"):
+def get_dataset_sample_ids(news_source, news_label, dataset_dir="/content/FakeNewsPropagation/data/sample_ids"):
     sample_list = []
     with open("{}/{}_{}_ids_list.txt".format(dataset_dir, news_source, news_label)) as file:
         for id in file:
@@ -69,7 +69,7 @@ def load_from_nx_graphs(dataset_dir: str, news_source: str, news_label: str):
 
     news_dataset_dir = "{}/{}_{}".format(dataset_dir, news_source, news_label)
 
-    for sample_id in get_dataset_sample_ids(news_source, news_label, "data/sample_ids"):
+    for sample_id in get_dataset_sample_ids(news_source, news_label, "/content/FakeNewsPropagation/data/sample_ids"):
         with open("{}/{}.json".format(news_dataset_dir, sample_id)) as file:
             tweet_node_objects.append(construct_tweet_node_from_json(json.load(file)))
 
@@ -96,4 +96,4 @@ def load_dataset(dataset_dir: str, news_source: str):
 
 
 if __name__ == '__main__':
-    fake_samples, real_samples = load_dataset("data/nx_network_data", "politifact")
+    fake_samples, real_samples = load_dataset("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", "politifact")
