@@ -82,7 +82,7 @@ def load_networkx_graphs(dataset_dir: str, news_source: str, news_label: str):
     news_samples = []
 
     for news_file in os.listdir(news_dataset_dir):
-        with open("{}/{}.json".format(news_dataset_dir, news_file)) as file:
+        with open("{}/{}".format(news_dataset_dir, news_file)) as file:
             news_samples.append(json_graph.tree_graph(json.load(file)))
 
     return news_samples
