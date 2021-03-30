@@ -11,6 +11,8 @@ from util.util import tweet_node
 def construct_tweet_node_from_json(json_data):
     new_graph = json_graph.tree_graph(json_data)
     ls=list(new_graph.in_degree())
+     #for node, in_degree in ls:
+    #  print(node,"  ",in_degree,"\n")
     root_node = [node for node, in_degree in ls if in_degree == 0][0]
     node_id_obj_dict = dict()
     dfs_node_construction_helper(root_node, new_graph, set(), node_id_obj_dict)
