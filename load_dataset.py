@@ -10,7 +10,8 @@ from util.util import tweet_node
 
 def construct_tweet_node_from_json(json_data):
     new_graph = json_graph.tree_graph(json_data)
-    root_node = [node for node, in_degree in nx.DiGraph.in_degree(new_graph).items() if in_degree == 0][0]
+    ls=list(new_graph.in_degree())
+    root_node = [node for node, in_degree in ls if in_degree == 0][0]
     node_id_obj_dict = dict()
     dfs_node_construction_helper(root_node, new_graph, set(), node_id_obj_dict)
     return node_id_obj_dict[root_node]
