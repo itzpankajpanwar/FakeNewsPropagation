@@ -104,6 +104,7 @@ def get_TPNF_dataset(out_dir, news_source, include_micro=True, include_macro=Tru
                                                                                time_interval)
 
         sample_features = np.concatenate([fake_sample_features, real_sample_features], axis=0)
+        file_name = '/content/FakeNewsPropagation/'+file_name;
         pickle.dump(sample_features, open(file_name, "wb"))
 
         return sample_features
