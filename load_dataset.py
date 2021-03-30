@@ -48,12 +48,12 @@ def add_node_object_edge(parent_node_id: int, child_node_id: int, node_id_obj_di
 
 
 def construct_tweet_node_from_nx_node(node_id, graph: nx.DiGraph):
-    return tweet_node(tweet_id=graph.node[node_id]['tweet_id'],
-                      created_time=graph.node[node_id]['time'],
-                      node_type=graph.node[node_id]['type'],
-                      user_id=graph.node[node_id]['user'],
-                      botometer_score=graph.node[node_id].get('bot_score', None),
-                      sentiment=graph.node[node_id].get('sentiment', None))
+    return tweet_node(tweet_id=graph.nodes[node_id]['tweet_id'],
+                      created_time=graph.nodes[node_id]['time'],
+                      node_type=graph.nodes[node_id]['type'],
+                      user_id=graph.nodes[node_id]['user'],
+                      botometer_score=graph.nodes[node_id].get('bot_score', None),
+                      sentiment=graph.nodes[node_id].get('sentiment', None))
 
 
 def get_dataset_sample_ids(news_source, news_label, dataset_dir="/content/FakeNewsPropagation/data/sample_ids"):
