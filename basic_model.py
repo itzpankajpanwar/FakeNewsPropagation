@@ -195,7 +195,7 @@ def get_classificaton_results_tpnf_by_time(news_source: str):
 if __name__ == "__main__":
     get_classificaton_results_tpnf("data/features", "politifact", time_interval=None, use_cache=False)
 
-    get_classificaton_results_tpnf("data/features", "gossipcop", time_interval=None, use_cache=False)
+    #get_classificaton_results_tpnf("data/features", "gossipcop", time_interval=None, use_cache=False)
 
     # Filter the graphs by time interval (for early fake news detection) and get the classification results
     # get_classificaton_results_tpnf_by_time("politifact")
