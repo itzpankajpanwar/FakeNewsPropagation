@@ -52,7 +52,7 @@ class BaseFeatureHelper(metaclass=ABCMeta):
         return "{}/{}.pkl".format(file_dir, "_".join(file_tags))
 
     def get_features_array(self, prop_graphs, micro_features, macro_features, news_source=None, label=None,
-                           file_dir="data/features", use_cache=False):
+                           file_dir="/content/FakeNewsPropagation/data/features", use_cache=False):
         function_refs = []
 
         file_name = self.get_dump_file_name(news_source, micro_features, macro_features, label, file_dir)
