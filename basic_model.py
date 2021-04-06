@@ -26,6 +26,8 @@ def get_classifier_by_name(classifier_name):
         return RandomForestClassifier(n_estimators=50)
     elif classifier_name == "SVM -linear kernel":
         return svm.SVC(kernel='linear')
+    else:
+      return ExtraTreesClassifier(n_estimators=100)
 
 
 def train_model(classifier_name, X_train, X_test, y_train, y_test):
@@ -34,7 +36,7 @@ def train_model(classifier_name, X_train, X_test, y_train, y_test):
     recall_values = []
     f1_score_values = []
 
-    for i in range(5):
+    for i in range(6):
         classifier_clone = get_classifier_by_name(classifier_name)
         classifier_clone.fit(X_train, y_train)
 
@@ -127,6 +129,7 @@ def apply_lstm_model(X_train, X_test, y_train, y_test):
     print('Test Loss: {}'.format(test_loss))
     print('Test Accuracy: {}'.format(test_acc))
 
+    
 
 def get_basic_model_results(X_train, X_test, y_train, y_test):
     scaler = preprocessing.StandardScaler().fit(X_train)
@@ -140,17 +143,23 @@ def get_basic_model_results(X_train, X_test, y_train, y_test):
     print("\n X TEST ",X_test.shape)
     print("\n Y TEST ",y_test.shape,"\n")
 
+    
+
     classifiers = [GaussianNB(), LogisticRegression(), DecisionTreeClassifier(),
                    RandomForestClassifier(n_estimators=100),
-                   svm.SVC()]
+                   svm.SVC(),ExtraTreesClassifier(n_estimators=100)]
     classifier_names = ["GaussianNB", "LogisticRegression", "DecisionTreeClassifier", "RandomForestClassifier",
-                        "SVM -linear kernel"]
+                        "SVM -linear kernel","ExtraTreesClassifier"]
 
     for idx in range(len(classifiers)):
         print("======={}=======".format(classifier_names[idx]))
         train_model(classifier_names[idx], X_train, X_test, y_train, y_test)
     
     apply_lstm_model(X_train, X_test, y_train, y_test);
+    #dump_random_forest_feature_importance("data/features", "politifact")
+
+    
+   
 
 
 def get_classificaton_results_tpnf(data_dir, news_source, time_interval, use_cache=False):
