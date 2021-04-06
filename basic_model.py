@@ -85,6 +85,12 @@ def get_basic_model_results(X_train, X_test, y_train, y_test):
 
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
+    
+    print("\n TRAIN AND TEST SHAPES ARE AS FOLLOWS")
+    print("\n X TRAIN : ",X_train.shape)
+    print("\n Y TRAIN ",y_train.shape)
+    print("\n X TEST ",X_test.shape)
+    print("\n Y TEST ",y_test.shape,"\n")
 
     classifiers = [GaussianNB(), LogisticRegression(), DecisionTreeClassifier(),
                    RandomForestClassifier(n_estimators=100),
