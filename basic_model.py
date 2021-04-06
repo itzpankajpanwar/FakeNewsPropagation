@@ -80,6 +80,54 @@ def get_metrics(target, logits, one_hot_rep=True):
     return accuracy, precision, recall, f1_score_val
 
 
+def apply_lstm_model(X_train, X_test, y_train, y_test):
+    print("\n TRAIN AND TEST SHAPES FOR LSTM MODEL IS AS FOLLOWS : ")
+    X_train = X_train[:,None,:]
+    X_test = X_test[:,None,:]
+    print("\n X TRAIN : ",X_train.shape)
+    print("\n Y TRAIN ",y_train.shape)
+    print("\n X TEST ",X_test.shape)
+    print("\n Y TEST ",y_test.shape,"\n")
+
+    import keras
+    from keras.datasets import mnist
+    from keras.models import Sequential
+    from keras.layers import Dense, Dropout, LSTM
+    from keras.optimizers import Adam
+
+    #Initializing the classifier Network
+    classifier = Sequential()
+
+    #Adding the input LSTM network layer
+    classifier.add(LSTM(128, input_shape=(X_train.shape[1:]), return_sequences=True))
+    classifier.add(Dropout(0.2))
+
+    #Adding a second LSTM network layer
+    #classifier.add(LSTM(128, input_shape=(X_train.shape[1:]), return_sequences=True))
+    classifier.add(LSTM(128))
+
+    #Adding a dense hidden layer
+    classifier.add(Dense(64, activation='relu'))
+    classifier.add(Dropout(0.2))
+
+    #Adding the output layer
+    classifier.add(Dense(10, activation='softmax'))
+
+    #Compiling the network
+    classifier.compile( loss='sparse_categorical_crossentropy',
+                  optimizer=Adam(lr=0.001, decay=1e-6),
+                  metrics=['accuracy'] )
+
+    #Fitting the data to the model
+    classifier.fit(X_train,
+            y_train,
+              epochs=300,
+              validation_data=(X_test, y_test))
+    test_loss, test_acc = classifier.evaluate(X_test, y_test)
+    print('Test Loss: {}'.format(test_loss))
+    print('Test Accuracy: {}'.format(test_acc))
+
+
 def get_basic_model_results(X_train, X_test, y_train, y_test):
     scaler = preprocessing.StandardScaler().fit(X_train)
 
@@ -101,6 +149,8 @@ def get_basic_model_results(X_train, X_test, y_train, y_test):
     for idx in range(len(classifiers)):
         print("======={}=======".format(classifier_names[idx]))
         train_model(classifier_names[idx], X_train, X_test, y_train, y_test)
+    
+    apply_lstm_model(X_train, X_test, y_train, y_test);
 
 
 def get_classificaton_results_tpnf(data_dir, news_source, time_interval, use_cache=False):
