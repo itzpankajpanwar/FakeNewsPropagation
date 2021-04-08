@@ -12,6 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 #from load_dataset import load_from_nx_graphs
 #from construct_sample_features import get_nx_propagation_graphs
@@ -34,8 +35,10 @@ def get_classifier_by_name(classifier_name):
         return RandomForestClassifier(n_estimators=50)
     elif classifier_name == "SVM -linear kernel":
         return svm.SVC(kernel='linear')
-    else:
+    elif classifier_name == "ExtraTreesClassifier":
       return ExtraTreesClassifier(n_estimators=100)
+    else:
+      return KNeighborsClassifier(n_neighbors=3)
 
 
 def train_model(classifier_name, X_train, X_test, y_train, y_test):
@@ -155,9 +158,9 @@ def get_basic_model_results(X_train, X_test, y_train, y_test):
 
     classifiers = [GaussianNB(), LogisticRegression(), DecisionTreeClassifier(),
                    RandomForestClassifier(n_estimators=100),
-                   svm.SVC(),ExtraTreesClassifier(n_estimators=100)]
+                   svm.SVC(),ExtraTreesClassifier(n_estimators=100),KNeighborsClassifier(n_neighbors=3)]
     classifier_names = ["GaussianNB", "LogisticRegression", "DecisionTreeClassifier", "RandomForestClassifier",
-                        "SVM -linear kernel","ExtraTreesClassifier"]
+                        "SVM -linear kernel","ExtraTreesClassifier","KNeighborsClassifier"]
 
     for idx in range(len(classifiers)):
         print("======={}=======".format(classifier_names[idx]))
@@ -316,3 +319,4 @@ if __name__ == "__main__":
     # Filter the graphs by time interval (for early fake news detection) and get the classification results
     # get_classificaton_results_tpnf_by_time("politifact")
     # get_classificaton_results_tpnf_by_time("gossipcop")
+
