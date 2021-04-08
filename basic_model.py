@@ -18,7 +18,7 @@ from sklearn.ensemble import AdaBoostClassifier
 #from load_dataset import load_from_nx_graphs
 #from construct_sample_features import get_nx_propagation_graphs
 #from analysis_util import equal_samples
-
+from centrality import get_degree_centrality,get_closness_centrality,get_betweenness_centrality
 from  construct_sample_features import get_TPNF_dataset, get_train_test_split, get_dataset_feature_names
 
 matplotlib.use('agg')
@@ -183,43 +183,16 @@ def get_classificaton_results_tpnf(data_dir, news_source, time_interval, use_cac
     include_structural = True
     include_temporal = True
     include_linguistic = False
-    
-    """
-    fake_prop_graph, real_prop_graph = get_nx_propagation_graphs("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
-    fake_prop_graph, real_prop_graph = equal_samples(fake_prop_graph, real_prop_graph)
+  
+    dc=get_degree_centrality("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
+    print("\n degree centrality shape ",len(dc))
+    cc=get_closness_centrality("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
+    print("\n clossness centrality shape ",len(cc))
+    #btwc=get_betweenness_centrality("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
+    #print("\n betweenness centrality shape ",len(btwc))
+    #for x in dc:
+     # print("\n",x," ")
 
-    import networkx as nx
-    G1 = nx.Graph()
-    G2 = nx.Graph()
-
-    for node in fake_prop_graph:
-      G1.add_node(node)
-    for node in real_prop_graph:
-      G2.add_node(node)
-
-    print("\n NO of nodes  : ",G1.number_of_nodes())
-    import matplotlib.pyplot as plt
-    plt.figure(figsize =(15, 15))
-    nx.draw_networkx(G1, with_labels = True)
-
-    deg_centrality_fake = nx.degree_centrality(G1)
-    for val in deg_centrality_fake:
-      print("\n",val)
-    deg_centrality_real = nx.degree_centrality(G2)
-    print("\n shape of fake deg is : ",deg_centrality_real)
-    dc = np.concatenate((deg_centrality_fake, deg_centrality_real), axis=0)
-    print("\n shape of dc is : ",dc.shape)
-
-    closeness_centrality_fake = fake_prop_graph.closeness_centrality()
-    closeness_centrality_real = real_prop_graph.closeness_centrality()
-    cc = np.concatenate((closeness_centrality_fake, closeness_centrality_real), axis=0)
-    
-
-    betweenness_centrality_fake = fake_prop_graph.betweenness_centrality
-    betweenness_centrality_real = real_prop_graph.betweenness_centrality
-    wc = np.concatenate((betweenness_centrality_fake, betweenness_centrality_real), axis=0)
-
-    """
     sample_feature_array = get_TPNF_dataset(data_dir, news_source, include_micro, include_macro, include_structural,
                                             include_temporal, include_linguistic, time_interval, use_cache=use_cache)
     
@@ -311,7 +284,7 @@ def get_classificaton_results_tpnf_by_time(news_source: str):
 
 if __name__ == "__main__":
 
-    dump_random_forest_feature_importance("data/features", "politifact")
+    #dump_random_forest_feature_importance("data/features", "politifact")
 
     print("\n\n Working on Politifact Data \n")
     get_classificaton_results_tpnf("data/features", "politifact", time_interval=None, use_cache=False)
@@ -322,6 +295,10 @@ if __name__ == "__main__":
     # Filter the graphs by time interval (for early fake news detection) and get the classification results
     # get_classificaton_results_tpnf_by_time("politifact")
     # get_classificaton_results_tpnf_by_time("gossipcop")
+
+
+
+
 
 
 
