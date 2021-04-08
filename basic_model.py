@@ -18,7 +18,7 @@ from sklearn.ensemble import AdaBoostClassifier
 #from load_dataset import load_from_nx_graphs
 #from construct_sample_features import get_nx_propagation_graphs
 #from analysis_util import equal_samples
-from centrality import get_degree_centrality,get_closness_centrality,get_betweenness_centrality
+from centrality import get_degree_centrality,get_closness_centrality,get_betweenness_centrality,get_pagerank
 from  construct_sample_features import get_TPNF_dataset, get_train_test_split, get_dataset_feature_names
 
 matplotlib.use('agg')
@@ -185,24 +185,24 @@ def get_classificaton_results_tpnf(data_dir, news_source, time_interval, use_cac
     include_linguistic = False
   
     dc=get_degree_centrality("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
-    print("\n degree centrality shape ",len(dc))
     cc=get_closness_centrality("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
-    print("\n clossness centrality shape ",len(cc))
-    #btwc=get_betweenness_centrality("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
-    #print("\n betweenness centrality shape ",len(btwc))
-    #for x in dc:
-     # print("\n",x," ")
+    pr=get_pagerank("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
+    
 
     sample_feature_arr = get_TPNF_dataset(data_dir, news_source, include_micro, include_macro, include_structural,
                                             include_temporal, include_linguistic, time_interval, use_cache=use_cache)
     dc = np.array(dc)
     cc = np.array(cc)
+    pr = np.array(pr)
     dc_trans = dc.reshape(-1,1)
     cc_trans = cc.reshape(-1,1)
+    pr_trans = pr.reshape(-1,1)
 
-   # np.hstack((sample_feature_array,dc_trans,cc_trans))
+    ccpr = np.append(cc_trans, pr_trans, 1)
+
     sample_feature_arra = np.append(sample_feature_arr, dc_trans, 1)
-    sample_feature_array = np.append(sample_feature_arra, dc_trans, 1)
+    sample_feature_array = np.append(sample_feature_arra, ccpr, 1)
+
     print("Sample feature array dimensions")
     print(sample_feature_array.shape, flush=True)
 
@@ -300,10 +300,3 @@ if __name__ == "__main__":
     # Filter the graphs by time interval (for early fake news detection) and get the classification results
     # get_classificaton_results_tpnf_by_time("politifact")
     # get_classificaton_results_tpnf_by_time("gossipcop")
-
-
-
-
-
-
-
