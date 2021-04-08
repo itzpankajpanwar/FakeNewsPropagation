@@ -193,11 +193,16 @@ def get_classificaton_results_tpnf(data_dir, news_source, time_interval, use_cac
     #for x in dc:
      # print("\n",x," ")
 
-    sample_feature_array = get_TPNF_dataset(data_dir, news_source, include_micro, include_macro, include_structural,
+    sample_feature_arr = get_TPNF_dataset(data_dir, news_source, include_micro, include_macro, include_structural,
                                             include_temporal, include_linguistic, time_interval, use_cache=use_cache)
-    
-   
+    dc = np.array(dc)
+    cc = np.array(cc)
+    dc_trans = dc.reshape(-1,1)
+    cc_trans = cc.reshape(-1,1)
 
+   # np.hstack((sample_feature_array,dc_trans,cc_trans))
+    sample_feature_arra = np.append(sample_feature_arr, dc_trans, 1)
+    sample_feature_array = np.append(sample_feature_arra, dc_trans, 1)
     print("Sample feature array dimensions")
     print(sample_feature_array.shape, flush=True)
 
