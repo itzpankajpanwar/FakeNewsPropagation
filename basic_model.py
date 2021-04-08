@@ -1,5 +1,9 @@
 import time
 
+import sys
+sys.path.insert(0,"/content/FakeNewsPropagation")
+
+
 import matplotlib
 import numpy as np
 from sklearn import preprocessing, svm
@@ -9,7 +13,11 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 
-from construct_sample_features import get_TPNF_dataset, get_train_test_split, get_dataset_feature_names
+#from load_dataset import load_from_nx_graphs
+#from construct_sample_features import get_nx_propagation_graphs
+#from analysis_util import equal_samples
+
+from  construct_sample_features import get_TPNF_dataset, get_train_test_split, get_dataset_feature_names
 
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
@@ -155,8 +163,8 @@ def get_basic_model_results(X_train, X_test, y_train, y_test):
         print("======={}=======".format(classifier_names[idx]))
         train_model(classifier_names[idx], X_train, X_test, y_train, y_test)
     
-    apply_lstm_model(X_train, X_test, y_train, y_test);
-    #dump_random_forest_feature_importance("data/features", "politifact")
+    #apply_lstm_model(X_train, X_test, y_train, y_test);
+    
 
     
    
@@ -168,10 +176,48 @@ def get_classificaton_results_tpnf(data_dir, news_source, time_interval, use_cac
 
     include_structural = True
     include_temporal = True
-    include_linguistic = True
+    include_linguistic = False
+    
+    """
+    fake_prop_graph, real_prop_graph = get_nx_propagation_graphs("/content/FakeNewsPropagation/data/nx_network_data/nx_network_data", news_source)
+    fake_prop_graph, real_prop_graph = equal_samples(fake_prop_graph, real_prop_graph)
 
+    import networkx as nx
+    G1 = nx.Graph()
+    G2 = nx.Graph()
+
+    for node in fake_prop_graph:
+      G1.add_node(node)
+    for node in real_prop_graph:
+      G2.add_node(node)
+
+    print("\n NO of nodes  : ",G1.number_of_nodes())
+    import matplotlib.pyplot as plt
+    plt.figure(figsize =(15, 15))
+    nx.draw_networkx(G1, with_labels = True)
+
+    deg_centrality_fake = nx.degree_centrality(G1)
+    for val in deg_centrality_fake:
+      print("\n",val)
+    deg_centrality_real = nx.degree_centrality(G2)
+    print("\n shape of fake deg is : ",deg_centrality_real)
+    dc = np.concatenate((deg_centrality_fake, deg_centrality_real), axis=0)
+    print("\n shape of dc is : ",dc.shape)
+
+    closeness_centrality_fake = fake_prop_graph.closeness_centrality()
+    closeness_centrality_real = real_prop_graph.closeness_centrality()
+    cc = np.concatenate((closeness_centrality_fake, closeness_centrality_real), axis=0)
+    
+
+    betweenness_centrality_fake = fake_prop_graph.betweenness_centrality
+    betweenness_centrality_real = real_prop_graph.betweenness_centrality
+    wc = np.concatenate((betweenness_centrality_fake, betweenness_centrality_real), axis=0)
+
+    """
     sample_feature_array = get_TPNF_dataset(data_dir, news_source, include_micro, include_macro, include_structural,
                                             include_temporal, include_linguistic, time_interval, use_cache=use_cache)
+    
+   
 
     print("Sample feature array dimensions")
     print(sample_feature_array.shape, flush=True)
@@ -258,9 +304,14 @@ def get_classificaton_results_tpnf_by_time(news_source: str):
 
 
 if __name__ == "__main__":
+
+    dump_random_forest_feature_importance("data/features", "politifact")
+
+    print("\n\n Working on Politifact Data \n")
     get_classificaton_results_tpnf("data/features", "politifact", time_interval=None, use_cache=False)
 
-    #get_classificaton_results_tpnf("data/features", "gossipcop", time_interval=None, use_cache=False)
+    print("\n\n Working on Gossipcop Data \n")
+    get_classificaton_results_tpnf("data/features", "gossipcop", time_interval=None, use_cache=False)
 
     # Filter the graphs by time interval (for early fake news detection) and get the classification results
     # get_classificaton_results_tpnf_by_time("politifact")
